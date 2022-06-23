@@ -6,6 +6,7 @@ import com.example.demo.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -31,5 +32,15 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void remove(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> findAllByPriceGreaterThan300() {
+        return productRepository.findAllByPriceGreaterThan300();
+    }
+
+    @Override
+    public List<Product> findAllByNameContaining(String name) {
+        return productRepository.findAllByNameContaining(name);
     }
 }

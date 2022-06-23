@@ -58,4 +58,14 @@ public class ProductController {
         iProductService.remove(id);
         return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
     }
+
+
+    @GetMapping("/greater-than-300")
+    public ResponseEntity findAllByPriceGreaterThan300() {
+        return new ResponseEntity( iProductService.findAllByPriceGreaterThan300(), HttpStatus.OK);
+    }
+    @GetMapping("/find-by-name")
+    public ResponseEntity findAllByNameContaining(@RequestParam String name) {
+        return new ResponseEntity( iProductService.findAllByNameContaining(name), HttpStatus.OK);
+    }
 }
