@@ -6,8 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -33,7 +38,7 @@ public class ProductController {
     }
 
     @PostMapping("")//Add-Thêm-RequestBody để lấy product trực tiếp từ web về để dùng
-    public ResponseEntity add(@RequestBody Product product) {
+    public ResponseEntity add(@Valid @RequestBody Product product) {
         iProductService.save(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
@@ -67,5 +72,17 @@ public class ProductController {
     @GetMapping("/find-by-name")
     public ResponseEntity findAllByNameContaining(@RequestParam String name) {
         return new ResponseEntity( iProductService.findAllByNameContaining(name), HttpStatus.OK);
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
